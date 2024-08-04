@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "246049965016",
+    "project_id": "anggriawan-adadeh",
+    "storage_bucket": "anggriawan-adadeh.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:246049965016:android:ef8bbd7a334f008d3b28ad",
+        "android_client_info": {
+          "package_name": "com.example.adadeh_store"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBV75Nt5zlTJ8fhIS5T9B8SAv3oQTIf9ko"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
