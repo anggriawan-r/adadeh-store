@@ -11,14 +11,31 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   final ProductRepository _productRepository = ProductRepository();
 
   ProductBloc() : super(ProductInitial()) {
-    on<LoadProductsWithCategory>((event, emit) async {
+    on<LoadAllProductsWithCategory>((event, emit) async {
       emit(ProductLoading());
 
       try {
-        await for (final productsWithCategories
+        await for (final productsWithCategory
             in _productRepository.getAllProductsWithCategoryStream()) {
-          emit(ProductLoaded(productsWithCategories));
+          emit(AllProductsLoaded(productsWithCategory));
         }
+      } catch (e) {
+        emit(ProductError(error: e.toString()));
+      }
+    });
+
+    on<LoadProductWithCategory>((event, emit) async {
+      emit(ProductLoading());
+
+      try {
+        final product =
+            await _productRepository.getProductWithCategory(event.productId);
+
+        if (product['product'] == null || product['category'] == null) {
+          throw Exception('Product or category not found');
+        }
+
+        emit(ProductLoaded(product));
       } catch (e) {
         emit(ProductError(error: e.toString()));
       }

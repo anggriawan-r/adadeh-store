@@ -34,22 +34,43 @@ class ProductRepository {
     }
   }
 
+  Future<Map<String, dynamic>> getProductWithCategory(String productId) async {
+    try {
+      final productsRef = _firebaseFirestore.collection('products');
+      final productSnapshot = await productsRef.doc(productId).get();
+
+      if (!productSnapshot.exists) {
+        throw Exception('Product not found');
+      }
+
+      final product = ProductModel.fromFirestore(productSnapshot, null);
+      final category = await getCategory(product.categoryRef);
+
+      return {
+        'product': product,
+        'category': category,
+      };
+    } catch (e) {
+      throw Exception('Error fetching product: $e');
+    }
+  }
+
   Stream<List<Map<String, dynamic>>> getAllProductsWithCategoryStream() {
     return _firebaseFirestore.collection('products').snapshots().asyncMap(
       (querySnapshot) async {
-        final List<Map<String, dynamic>> productsWithCategories = [];
+        final List<Map<String, dynamic>> productsWithCategory = [];
 
         for (final doc in querySnapshot.docs) {
           final product = ProductModel.fromFirestore(doc, null);
           final category = await getCategory(product.categoryRef);
 
-          productsWithCategories.add({
+          productsWithCategory.add({
             'product': product,
             'category': category,
           });
         }
 
-        return productsWithCategories;
+        return productsWithCategory;
       },
     );
   }

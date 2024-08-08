@@ -6,6 +6,7 @@ class ProductModel {
   final String description;
   final String imageUrl;
   final int price;
+  final int stock;
   final DocumentReference categoryRef;
 
   ProductModel({
@@ -14,6 +15,7 @@ class ProductModel {
     required this.description,
     required this.imageUrl,
     required this.price,
+    required this.stock,
     required this.categoryRef,
   });
 
@@ -28,6 +30,7 @@ class ProductModel {
       description: data?['description'] ?? '',
       imageUrl: data?['imageUrl'] ?? '',
       price: data?['price'] ?? 0,
+      stock: data?['stock'] ?? 0,
       categoryRef: data?['categoryRef'] as DocumentReference,
     );
   }
@@ -39,6 +42,7 @@ class ProductModel {
       'description': description,
       'imageUrl': imageUrl,
       'price': price,
+      'stock': stock,
       'categoryRef': categoryRef,
     };
   }

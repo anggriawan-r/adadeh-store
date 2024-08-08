@@ -15,10 +15,14 @@ class ProductScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 8,
+              vertical: 8,
+            ),
             child: Column(
               children: [
                 BlocBuilder<ProductBloc, ProductState>(
@@ -28,7 +32,7 @@ class ProductScreen extends StatelessWidget {
                         enabled: true,
                         child: ProductGridFake(),
                       );
-                    } else if (state is ProductLoaded) {
+                    } else if (state is AllProductsLoaded) {
                       return ProductGrid(state: state);
                     } else if (state is ProductError) {
                       return Center(child: Text('Error: ${state.error}'));
@@ -47,7 +51,7 @@ class ProductScreen extends StatelessWidget {
 }
 
 class ProductGrid extends StatelessWidget {
-  final ProductLoaded state;
+  final AllProductsLoaded state;
 
   const ProductGrid({super.key, required this.state});
 
@@ -62,9 +66,9 @@ class ProductGrid extends StatelessWidget {
         mainAxisSpacing: 8,
         mainAxisExtent: 270,
       ),
-      itemCount: state.productsWithCategories.length,
+      itemCount: state.productsWithCategory.length,
       itemBuilder: (context, index) {
-        final productWithCategory = state.productsWithCategories[index];
+        final productWithCategory = state.productsWithCategory[index];
         final product = productWithCategory['product'] as ProductModel;
         final category = productWithCategory['category'] as CategoryModel;
 
@@ -72,6 +76,7 @@ class ProductGrid extends StatelessWidget {
           onTap: () {
             context.push(
               '${RouteNames.product}/${product.id}',
+              extra: productWithCategory,
             );
           },
           child: Column(

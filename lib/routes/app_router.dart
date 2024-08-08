@@ -1,6 +1,8 @@
 import 'package:adadeh_store/routes/route_names.dart';
 import 'package:adadeh_store/screens/auth/login/login_screen.dart';
 import 'package:adadeh_store/screens/cart/cart_screen.dart';
+import 'package:adadeh_store/screens/cart/order_screen.dart';
+import 'package:adadeh_store/screens/cart/select_payment_screen.dart';
 import 'package:adadeh_store/screens/home/home_screen.dart';
 import 'package:adadeh_store/screens/product/product_detail.dart';
 import 'package:adadeh_store/screens/product/product_screen.dart';
@@ -41,8 +43,17 @@ final GoRouter appRouter = GoRouter(
       builder: (context, state) => const LoginScreen(),
     ),
     GoRoute(
-      path: RouteNames.cart,
-      builder: (context, state) => const CartScreen(),
-    ),
+        path: RouteNames.cart,
+        builder: (context, state) => const CartScreen(),
+        routes: [
+          GoRoute(
+            path: RouteNames.order,
+            builder: (context, state) => const OrderScreen(),
+          ),
+          GoRoute(
+            path: RouteNames.payment,
+            builder: (context, state) => const SelectPaymentScreen(),
+          ),
+        ]),
   ],
 );

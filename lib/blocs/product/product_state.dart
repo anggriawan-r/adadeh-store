@@ -11,13 +11,22 @@ final class ProductInitial extends ProductState {}
 
 class ProductLoading extends ProductState {}
 
-class ProductLoaded extends ProductState {
-  final List<Map<String, dynamic>> productsWithCategories;
+class AllProductsLoaded extends ProductState {
+  final List<Map<String, dynamic>> productsWithCategory;
 
-  const ProductLoaded(this.productsWithCategories);
+  const AllProductsLoaded(this.productsWithCategory);
 
   @override
-  List<Object> get props => [productsWithCategories];
+  List<Object> get props => [productsWithCategory];
+}
+
+class ProductLoaded extends ProductState {
+  final Map<String, dynamic> productWithCategory;
+
+  const ProductLoaded(this.productWithCategory);
+
+  @override
+  List<Object> get props => [productWithCategory];
 }
 
 class ProductError extends ProductState {
