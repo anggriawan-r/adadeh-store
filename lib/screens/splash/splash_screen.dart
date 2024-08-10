@@ -66,7 +66,7 @@ class _SplashScreenState extends State<SplashScreen>
       listener: (context, state) {
         Timer(_splashDuration, () {
           if (state is AuthAuthenticated) {
-            context.go(RouteNames.home);
+            context.go(RouteNames.landing);
           } else if (state is AuthUnauthenticated) {
             context.go(RouteNames.login);
           }

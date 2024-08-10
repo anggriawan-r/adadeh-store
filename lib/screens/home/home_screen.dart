@@ -1,29 +1,19 @@
 import 'package:adadeh_store/blocs/cart/cart_bloc.dart';
-import 'package:adadeh_store/screens/cart/cart_screen.dart';
-import 'package:adadeh_store/screens/landing/landing_screen.dart';
-import 'package:adadeh_store/screens/product/product_screen.dart';
-import 'package:adadeh_store/screens/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen(this.navigationShell, {super.key});
+
+  final StatefulNavigationShell navigationShell;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int selectedIndex = 0;
-
-  static const body = <Widget>[
-    LandingScreen(),
-    ProductScreen(),
-    CartScreen(),
-    ProfileScreen(),
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,12 +29,10 @@ class _HomeScreenState extends State<HomeScreen> {
           }
 
           return NavigationBar(
-            selectedIndex: selectedIndex,
-            onDestinationSelected: (value) =>
-                setState(() => selectedIndex = value),
+            selectedIndex: widget.navigationShell.currentIndex,
+            onDestinationSelected: _onTap,
             backgroundColor: Colors.white,
             indicatorColor: Colors.grey.shade200,
-            elevation: 1,
             shadowColor: Colors.black,
             labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
             destinations: [
@@ -78,7 +66,14 @@ class _HomeScreenState extends State<HomeScreen> {
           );
         },
       ),
-      body: body[selectedIndex],
+      body: widget.navigationShell,
+    );
+  }
+
+  void _onTap(index) {
+    widget.navigationShell.goBranch(
+      index,
+      initialLocation: index == widget.navigationShell.currentIndex,
     );
   }
 }

@@ -1,5 +1,5 @@
 import 'package:adadeh_store/routes/route_names.dart';
-import 'package:adadeh_store/screens/utils/currency_formatter.dart';
+import 'package:adadeh_store/utils/currency_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
@@ -46,7 +46,7 @@ class PaymentStatusScreen extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
-                  context.go(RouteNames.orderHistory);
+                  context.go(RouteNames.landing);
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.black,
@@ -55,7 +55,7 @@ class PaymentStatusScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                child: const Text('Back to order history'),
+                child: const Text('Go to home'),
               ),
             ),
           ],

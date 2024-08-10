@@ -39,3 +39,7 @@ class AuthRegistered extends AuthEvent {
   @override
   List<Object> get props => [name, phone, email, password];
 }
+
+class GetCurrentUser extends AuthEvent {}
+
+class VerifyEmail extends AuthEvent {}

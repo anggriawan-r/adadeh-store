@@ -13,11 +13,12 @@ class AuthLoading extends AuthState {}
 
 class AuthAuthenticated extends AuthState {
   final User user;
+  final UserModel profile;
 
-  const AuthAuthenticated({required this.user});
+  const AuthAuthenticated({required this.user, required this.profile});
 
   @override
-  List<Object> get props => [user];
+  List<Object> get props => [user, profile];
 }
 
 class AuthUnauthenticated extends AuthState {}
@@ -32,3 +33,5 @@ class AuthFailure extends AuthState {
   @override
   List<Object> get props => [error];
 }
+
+class AuthEmailVerified extends AuthState {}

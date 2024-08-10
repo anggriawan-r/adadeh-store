@@ -1,6 +1,6 @@
 class RouteNames {
   static const String splash = '/';
-  static const String home = '/home';
+  static const String landing = '/landing';
   static const String login = '/login';
   static const String register = '/register';
   static const String cart = '/cart';
@@ -12,4 +12,7 @@ class RouteNames {
   static const String product = '/product';
   static const String productDetail = '/product/:id';
   static const String profile = '/profile';
+
+  static const String adminDashboard = '/admin-dashboard';
+  static const String adminCustomer = '/admin-customer';
 }

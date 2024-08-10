@@ -1,6 +1,6 @@
 import 'package:adadeh_store/blocs/order/order_bloc.dart';
 import 'package:adadeh_store/routes/route_names.dart';
-import 'package:adadeh_store/screens/utils/currency_formatter.dart';
+import 'package:adadeh_store/utils/currency_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';

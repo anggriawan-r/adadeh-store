@@ -1,7 +1,8 @@
 import 'package:adadeh_store/blocs/order/order_bloc.dart';
 import 'package:adadeh_store/data/models/product_model.dart';
+import 'package:adadeh_store/data/repositories/profile_repository.dart';
 import 'package:adadeh_store/routes/route_names.dart';
-import 'package:adadeh_store/screens/utils/currency_formatter.dart';
+import 'package:adadeh_store/utils/currency_formatter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -133,25 +134,36 @@ class _OrderScreenState extends State<OrderScreen> {
                       borderRadius: BorderRadius.circular(32),
                       color: Colors.white,
                     ),
-                    child: const Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Jotaro',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                        Row(
-                          children: [
-                            Icon(Iconsax.location),
-                            SizedBox(width: 8),
-                            Text('Boulevard St.'),
-                          ],
-                        ),
-                      ],
-                    ),
+                    child: FutureBuilder(
+                        future: ProfileRepository().getUserProfile(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  snapshot.data!.name,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                Row(
+                                  children: [
+                                    const Icon(Iconsax.location),
+                                    const SizedBox(width: 8),
+                                    Text(snapshot.data!.address),
+                                  ],
+                                ),
+                              ],
+                            );
+                          } else if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Text('Loading...');
+                          } else {
+                            return const Text('Error');
+                          }
+                        }),
                   ),
                   const SizedBox(height: 16),
                   ListView.builder(

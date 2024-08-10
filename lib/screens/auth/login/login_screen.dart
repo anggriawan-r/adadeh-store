@@ -34,7 +34,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             );
 
-            context.go(RouteNames.home);
+            context.go(RouteNames.landing);
           }
 
           if (state is AuthFailure) {

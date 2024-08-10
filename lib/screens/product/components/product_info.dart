@@ -1,6 +1,6 @@
 import 'package:adadeh_store/data/models/category_model.dart';
 import 'package:adadeh_store/data/models/product_model.dart';
-import 'package:adadeh_store/screens/utils/currency_formatter.dart';
+import 'package:adadeh_store/utils/currency_formatter.dart';
 import 'package:flutter/material.dart';
 
 class ProductInfo extends StatefulWidget {
@@ -37,6 +37,14 @@ class _ProductInfoState extends State<ProductInfo> {
           style: const TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
+          ),
+        ),
+        Text(
+          currencyFormatter(widget.product.price),
+          style: const TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: Colors.deepOrange,
           ),
         ),
         const SizedBox(height: 16),
@@ -87,14 +95,6 @@ class _ProductInfoState extends State<ProductInfo> {
               color: Colors.deepOrange,
               fontWeight: FontWeight.bold,
             ),
-          ),
-        ),
-        const SizedBox(height: 16),
-        Text(
-          currencyFormatter(widget.product.price),
-          style: const TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
           ),
         ),
       ],

@@ -1,4 +1,6 @@
+import 'package:adadeh_store/blocs/auth/auth_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax/iconsax.dart';
 
 class ProfileSettings extends StatelessWidget {
@@ -19,7 +21,10 @@ class ProfileSettings extends StatelessWidget {
       child: Column(
         children: [
           ListTile(
-            onTap: () {},
+            onTap: () {
+              final authBloc = context.read<AuthBloc>();
+              authBloc.add(VerifyEmail());
+            },
             contentPadding: EdgeInsets.zero,
             leading: const Icon(Iconsax.sms),
             title: const Text('Verify email'),
@@ -33,7 +38,7 @@ class ProfileSettings extends StatelessWidget {
             onTap: () {},
             contentPadding: EdgeInsets.zero,
             leading: const Icon(Iconsax.location),
-            title: const Text('Add/change address'),
+            title: const Text('Change address'),
             trailing: const Icon(Icons.arrow_forward_ios),
           ),
           Divider(

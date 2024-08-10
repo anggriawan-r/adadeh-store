@@ -1,7 +1,9 @@
+import 'dart:developer';
+
 import 'package:adadeh_store/blocs/cart/cart_bloc.dart';
 import 'package:adadeh_store/data/models/product_model.dart';
 import 'package:adadeh_store/routes/route_names.dart';
-import 'package:adadeh_store/screens/utils/currency_formatter.dart';
+import 'package:adadeh_store/utils/currency_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -15,10 +17,16 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
+  bool isMasterChecked = false;
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<CartBloc>().add(LoadCart());
+  }
+
   @override
   Widget build(BuildContext context) {
-    bool isMasterChecked = false;
-
     void toggleMasterCheckbox(bool? value) {
       setState(() {
         isMasterChecked = value ?? false;
@@ -37,6 +45,8 @@ class _CartScreenState extends State<CartScreen> {
       ),
       bottomSheet: BlocBuilder<CartBloc, CartState>(
         builder: (context, state) {
+          log(state.toString());
+
           if (state is CartLoaded) {
             final productsWithCategory = state.productsWithCategory;
 
@@ -58,8 +68,12 @@ class _CartScreenState extends State<CartScreen> {
               },
             );
 
-            isMasterChecked =
-                productsWithCategory.every((item) => item['isChecked']);
+            if (productsWithCategory.isEmpty) {
+              isMasterChecked = false;
+            } else {
+              isMasterChecked =
+                  productsWithCategory.every((item) => item['isChecked']);
+            }
 
             final orderDetail = {
               'products': productsChecked,
@@ -149,13 +163,14 @@ class _CartScreenState extends State<CartScreen> {
           if (state is CartLoading) {
             return const Center(child: CircularProgressIndicator());
           } else if (state is CartEmpty) {
-            setState(() {
-              isMasterChecked = false;
-            });
-
             return const Center(child: Text('Cart is empty. Let\'s add some!'));
           } else if (state is CartLoaded) {
             final productsWithCategory = state.productsWithCategory;
+
+            if (productsWithCategory.isEmpty) {
+              return const Center(
+                  child: Text('Cart is empty. Let\'s add some!'));
+            }
 
             return Column(
               children: [
@@ -290,10 +305,6 @@ class _CartScreenState extends State<CartScreen> {
               ],
             );
           } else if (state is CartError) {
-            setState(() {
-              isMasterChecked = false;
-            });
-
             return Center(
               child: Text(state.message),
             );

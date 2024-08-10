@@ -1,7 +1,9 @@
+import 'package:adadeh_store/data/models/user_model.dart';
 import 'package:adadeh_store/data/repositories/auth_repository.dart';
 
 // ignore: depend_on_referenced_packages
 import 'package:bloc/bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -10,14 +12,20 @@ part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository _authRepository = AuthRepository();
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   AuthBloc() : super(AuthInitial()) {
     on<AuthStarted>(
-      (event, emit) {
+      (event, emit) async {
         try {
           final user = _authRepository.getCurrentUser();
           if (user != null) {
-            emit(AuthAuthenticated(user: user));
+            final doc =
+                await _firestore.collection('users').doc(user.uid).get();
+
+            final profile = UserModel.fromFirestore(doc, null);
+
+            emit(AuthAuthenticated(user: user, profile: profile));
           } else {
             emit(AuthUnauthenticated());
           }
@@ -35,7 +43,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             email: event.email,
             password: event.password,
           );
-          emit(AuthAuthenticated(user: user!));
+
+          if (user == null) {
+            throw Exception('User not found');
+          }
+
+          final doc = await _firestore.collection('users').doc(user.uid).get();
+
+          final profile = UserModel.fromFirestore(doc, null);
+
+          emit(AuthAuthenticated(user: user, profile: profile));
         } catch (e) {
           emit(AuthFailure(error: e.toString()));
         }
@@ -92,5 +109,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         }
       },
     );
+
+    on<VerifyEmail>((event, emit) async {
+      try {
+        await _authRepository.verifyEmail();
+        add(AuthStarted());
+      } catch (e) {
+        emit(AuthFailure(error: e.toString()));
+      }
+    });
   }
 }

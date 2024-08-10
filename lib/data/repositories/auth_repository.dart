@@ -28,6 +28,7 @@ class AuthRepository {
         final UserModel userData = UserModel(
           name: name,
           email: email,
+          emailVerified: false,
           phone: phone,
           role: 'user',
           address: address,
@@ -58,7 +59,7 @@ class AuthRepository {
       if (user != null) {
         return user;
       } else {
-        throw Exception('Email not verified');
+        throw Exception('User not found');
       }
     } catch (e) {
       throw e.toString();
@@ -75,5 +76,12 @@ class AuthRepository {
       return user;
     }
     return null;
+  }
+
+  Future<void> verifyEmail() async {
+    await _firebaseFirestore
+        .collection('users')
+        .doc(getCurrentUser()!.uid)
+        .update({'emailVerified': true});
   }
 }

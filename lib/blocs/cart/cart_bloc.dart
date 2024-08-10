@@ -27,7 +27,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
 
         emit(CartLoaded(cart, productsWithCategory));
       } catch (e) {
-        emit(CartError('Error fetching cart: $e'));
+        emit(CartError(e.toString()));
       }
     });
 

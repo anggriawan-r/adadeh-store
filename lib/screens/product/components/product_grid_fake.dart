@@ -1,54 +1,10 @@
-import 'package:adadeh_store/screens/utils/currency_formatter.dart';
+import 'package:adadeh_store/utils/currency_formatter.dart';
 import 'package:flutter/material.dart';
 
 class ProductGridFake extends StatelessWidget {
   const ProductGridFake({super.key});
 
   static final List<Map<String, dynamic>> _products = [
-    {
-      "product": {
-        "name": 'Product 1',
-        "price": 100,
-        "description": 'Product 1 description',
-        "imageUrl": 'https://picsum.photos/200/300',
-      },
-      "category": {
-        "name": "Product 1",
-      },
-    },
-    {
-      "product": {
-        "name": 'Product 1',
-        "price": 100,
-        "description": 'Product 1 description',
-        "imageUrl": 'https://picsum.photos/200/300',
-      },
-      "category": {
-        "name": "Product 1",
-      },
-    },
-    {
-      "product": {
-        "name": 'Product 1',
-        "price": 100,
-        "description": 'Product 1 description',
-        "imageUrl": 'https://picsum.photos/200/300',
-      },
-      "category": {
-        "name": "Product 1",
-      },
-    },
-    {
-      "product": {
-        "name": 'Product 1',
-        "price": 100,
-        "description": 'Product 1 description',
-        "imageUrl": 'https://picsum.photos/200/300',
-      },
-      "category": {
-        "name": "Product 1",
-      },
-    },
     {
       "product": {
         "name": 'Product 1',
@@ -106,7 +62,7 @@ class ProductGridFake extends StatelessWidget {
         mainAxisSpacing: 8,
         mainAxisExtent: 270,
       ),
-      itemCount: 8,
+      itemCount: _products.length,
       itemBuilder: (context, index) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,

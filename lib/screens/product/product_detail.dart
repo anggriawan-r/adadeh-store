@@ -2,7 +2,6 @@ import 'package:adadeh_store/blocs/cart/cart_bloc.dart';
 import 'package:adadeh_store/data/models/category_model.dart';
 import 'package:adadeh_store/data/models/product_model.dart';
 import 'package:adadeh_store/notifications/notification_helper.dart';
-import 'package:adadeh_store/routes/route_names.dart';
 import 'package:adadeh_store/screens/product/components/product_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -70,31 +69,22 @@ class _ProductDetailState extends State<ProductDetail> {
     }
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.white,
         title: const Text(
           'Product Detail',
           style: TextStyle(
             fontWeight: FontWeight.bold,
           ),
         ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              context.push(RouteNames.cart);
-            },
-            icon: const Badge(
-              label: Text('2'),
-              child: Icon(Iconsax.shopping_cart),
-            ),
-          ),
-        ],
       ),
       bottomSheet: Container(
         padding: const EdgeInsets.symmetric(
           horizontal: 16,
+          vertical: 16,
         ),
         width: double.infinity,
-        height: 150,
         decoration: const BoxDecoration(
           color: Colors.white,
           boxShadow: [
@@ -140,33 +130,12 @@ class _ProductDetailState extends State<ProductDetail> {
                 ),
               ),
             ),
-            const SizedBox(height: 8),
-            SizedBox(
-              width: double.infinity,
-              height: 56,
-              child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey.shade300,
-                  foregroundColor: Colors.black,
-                  shape: const StadiumBorder(),
-                ),
-                child: const Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(Iconsax.heart),
-                    SizedBox(width: 12),
-                    Text('Add to wishlist'),
-                  ],
-                ),
-              ),
-            ),
           ],
         ),
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.only(bottom: 170),
+          padding: const EdgeInsets.only(bottom: 100),
           child: Column(
             children: [
               Image.network(

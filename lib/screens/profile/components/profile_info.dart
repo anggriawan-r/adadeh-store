@@ -1,17 +1,23 @@
+import 'dart:developer';
+
 import 'package:adadeh_store/data/models/user_model.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ProfileInfo extends StatelessWidget {
-  final FirebaseAuth firebaseAuth;
+  final bool emailVerified;
 
-  const ProfileInfo(
-      {super.key, required this.profile, required this.firebaseAuth});
+  const ProfileInfo({
+    super.key,
+    required this.profile,
+    required this.emailVerified,
+  });
 
   final UserModel profile;
 
   @override
   Widget build(BuildContext context) {
+    log(emailVerified.toString());
+
     return Container(
       padding: const EdgeInsets.only(bottom: 16),
       width: double.infinity,
@@ -41,7 +47,7 @@ class ProfileInfo extends StatelessWidget {
                     fontWeight: FontWeight.w400,
                   ),
                 ),
-                firebaseAuth.currentUser!.emailVerified
+                emailVerified
                     ? const TextSpan(
                         text: ' (verified)',
                         style: TextStyle(

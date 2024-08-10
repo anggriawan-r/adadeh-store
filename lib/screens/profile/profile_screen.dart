@@ -1,11 +1,9 @@
 import 'package:adadeh_store/blocs/auth/auth_bloc.dart';
-import 'package:adadeh_store/blocs/profile/profile_bloc.dart';
 import 'package:adadeh_store/routes/route_names.dart';
 import 'package:adadeh_store/screens/profile/components/profile_card.dart';
 import 'package:adadeh_store/screens/profile/components/profile_info.dart';
 import 'package:adadeh_store/screens/profile/components/profile_settings.dart';
 import 'package:adadeh_store/screens/profile/components/shopping.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -16,7 +14,7 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+    context.read<AuthBloc>().add(AuthStarted());
 
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
@@ -27,12 +25,13 @@ class ProfileScreen extends StatelessWidget {
         ),
         backgroundColor: Colors.grey.shade100,
       ),
-      body: BlocBuilder<ProfileBloc, ProfileState>(
+      body: BlocBuilder<AuthBloc, AuthState>(
         builder: (context, state) {
-          if (state is ProfileLoading) {
+          if (state is AuthLoading) {
             return const Center(child: CircularProgressIndicator());
-          } else if (state is ProfileLoadedSuccess) {
+          } else if (state is AuthAuthenticated) {
             final profile = state.profile;
+
             return SingleChildScrollView(
               child: SafeArea(
                 child: Padding(
@@ -43,7 +42,7 @@ class ProfileScreen extends StatelessWidget {
                       children: [
                         ProfileInfo(
                           profile: profile,
-                          firebaseAuth: firebaseAuth,
+                          emailVerified: profile.emailVerified,
                         ),
                         const SizedBox(height: 16),
                         const Shopping(),
@@ -56,17 +55,7 @@ class ProfileScreen extends StatelessWidget {
                           state: context.read<AuthBloc>().state,
                           onTap: () {
                             context.read<AuthBloc>().add(AuthLoggedOut());
-
-                            final authState = context.read<AuthBloc>().state;
-
-                            if (authState is AuthUnauthenticated) {
-                              context.go(RouteNames.login);
-                            } else if (authState is AuthFailure) {
-                              SnackBar(
-                                backgroundColor: Colors.red,
-                                content: Text(authState.error),
-                              );
-                            }
+                            context.go(RouteNames.login);
                           },
                         ),
                         const SizedBox(height: 16),
@@ -76,8 +65,8 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
             );
-          } else if (state is ProfileError) {
-            return Center(child: Text(state.message));
+          } else if (state is AuthFailure) {
+            return Center(child: Text(state.error));
           } else {
             return const Center(child: Text('Something went wrong.'));
           }

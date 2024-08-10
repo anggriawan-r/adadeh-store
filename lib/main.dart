@@ -2,7 +2,6 @@ import 'package:adadeh_store/blocs/auth/auth_bloc.dart';
 import 'package:adadeh_store/blocs/order/order_bloc.dart';
 import 'package:adadeh_store/blocs/cart/cart_bloc.dart';
 import 'package:adadeh_store/blocs/product/product_bloc.dart';
-import 'package:adadeh_store/blocs/profile/profile_bloc.dart';
 import 'package:adadeh_store/firebase_options.dart';
 import 'package:adadeh_store/notifications/notification_helper.dart';
 import 'package:adadeh_store/routes/app_router.dart';
@@ -44,9 +43,6 @@ class MainApp extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (context) => AuthBloc()..add(AuthStarted()),
-        ),
-        BlocProvider(
-          create: (context) => ProfileBloc()..add(ProfileLoaded()),
         ),
         BlocProvider(
           create: (context) =>

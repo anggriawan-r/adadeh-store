@@ -1,6 +1,7 @@
 import 'package:adadeh_store/data/models/cart_model.dart';
 import 'package:adadeh_store/data/models/category_model.dart';
 import 'package:adadeh_store/data/models/product_model.dart';
+import 'package:adadeh_store/utils/error_handling.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -28,7 +29,7 @@ class CartRepository {
           await _firestore.collection('carts').doc(userId).get();
 
       if (!cartSnapshot.exists) {
-        throw Exception('Cart is empty. Let\'s add some!');
+        throw ErrorHandling('Cart is empty. Let\'s add some!');
       }
 
       final cart = CartModel.fromFirestore(cartSnapshot, null);
@@ -40,7 +41,7 @@ class CartRepository {
             await _firestore.collection('products').doc(item.productId).get();
 
         if (!productSnapshot.exists) {
-          throw Exception('Product not found');
+          throw ErrorHandling('Product not found');
         }
 
         final product = ProductModel.fromFirestore(productSnapshot, null);
@@ -59,7 +60,7 @@ class CartRepository {
         'productsWithCategory': productsWithCategory,
       };
     } catch (e) {
-      throw Exception('Error fetching cart: $e');
+      throw ErrorHandling(e.toString());
     }
   }
 
@@ -100,7 +101,7 @@ class CartRepository {
 
       await cartDocRef.set(cart.toFirestore());
     } catch (e) {
-      throw Exception('Error adding product to cart: $e');
+      throw ErrorHandling('Error adding product to cart: $e');
     }
   }
 
@@ -112,7 +113,7 @@ class CartRepository {
 
       final cartSnapshot = await cartDocRef.get();
       if (!cartSnapshot.exists) {
-        throw Exception('Cart not found');
+        throw ErrorHandling('Cart not found');
       }
 
       final cart = CartModel.fromFirestore(cartSnapshot, null);
@@ -129,7 +130,7 @@ class CartRepository {
         await cartDocRef.set(cart.toFirestore());
       }
     } catch (e) {
-      throw Exception('Error updating cart item: $e');
+      throw ErrorHandling('Error updating cart item: $e');
     }
   }
 
@@ -141,7 +142,7 @@ class CartRepository {
       final cartSnapshot = await cartDocRef.get();
 
       if (!cartSnapshot.exists) {
-        throw Exception('Cart not found');
+        throw ErrorHandling('Cart not found');
       }
 
       final cart = CartModel.fromFirestore(cartSnapshot, null);
@@ -152,7 +153,7 @@ class CartRepository {
 
       await cartDocRef.set(cart.toFirestore());
     } catch (e) {
-      throw Exception('Error selecting all cart items: $e');
+      throw ErrorHandling('Error selecting all cart items: $e');
     }
   }
 
@@ -163,7 +164,7 @@ class CartRepository {
 
       final cartSnapshot = await cartDocRef.get();
       if (!cartSnapshot.exists) {
-        throw Exception('Cart not found');
+        throw ErrorHandling('Cart not found');
       }
 
       final cart = CartModel.fromFirestore(cartSnapshot, null);
@@ -172,7 +173,7 @@ class CartRepository {
 
       await cartDocRef.set(cart.toFirestore());
     } catch (e) {
-      throw Exception('Error removing product from cart: $e');
+      throw ErrorHandling('Error removing product from cart: $e');
     }
   }
 
@@ -182,7 +183,7 @@ class CartRepository {
       final cartDocRef = _firestore.collection('carts').doc(userId);
       final cartSnapshot = await cartDocRef.get();
       if (!cartSnapshot.exists) {
-        throw Exception('Cart not found');
+        throw ErrorHandling('Cart not found');
       }
 
       final cart = CartModel.fromFirestore(cartSnapshot, null);
@@ -199,7 +200,7 @@ class CartRepository {
         await cartDocRef.set(cart.toFirestore());
       }
     } catch (e) {
-      throw Exception('Error incrementing cart item quantity: $e');
+      throw ErrorHandling('Error incrementing cart item quantity: $e');
     }
   }
 
@@ -209,7 +210,7 @@ class CartRepository {
       final cartDocRef = _firestore.collection('carts').doc(userId);
       final cartSnapshot = await cartDocRef.get();
       if (!cartSnapshot.exists) {
-        throw Exception('Cart not found');
+        throw ErrorHandling('Cart not found');
       }
 
       final cart = CartModel.fromFirestore(cartSnapshot, null);
@@ -230,7 +231,7 @@ class CartRepository {
         }
       }
     } catch (e) {
-      throw Exception('Error decrementing cart item quantity: $e');
+      throw ErrorHandling('Error decrementing cart item quantity: $e');
     }
   }
 }
