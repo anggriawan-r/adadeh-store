@@ -74,4 +74,34 @@ class ProductRepository {
       },
     );
   }
+
+  Future<void> substractStock(String productId, int quantity) async {
+    if (quantity < 0) {
+      throw Exception('Invalid quantity');
+    }
+
+    final doc =
+        await _firebaseFirestore.collection('products').doc(productId).get();
+    final product = ProductModel.fromFirestore(doc, null);
+
+    if (product.stock < quantity) {
+      throw Exception('Stock is not enough');
+    }
+
+    await _firebaseFirestore
+        .collection('products')
+        .doc(productId)
+        .update({'stock': FieldValue.increment(-quantity)});
+  }
+
+  Future<void> addStock(String productId, int quantity) async {
+    if (quantity < 0) {
+      throw Exception('Invalid quantity');
+    }
+
+    await _firebaseFirestore
+        .collection('products')
+        .doc(productId)
+        .update({'stock': FieldValue.increment(quantity)});
+  }
 }

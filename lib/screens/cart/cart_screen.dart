@@ -7,11 +7,25 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
 
-class CartScreen extends StatelessWidget {
+class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
 
   @override
+  State<CartScreen> createState() => _CartScreenState();
+}
+
+class _CartScreenState extends State<CartScreen> {
+  @override
   Widget build(BuildContext context) {
+    bool isMasterChecked = false;
+
+    void toggleMasterCheckbox(bool? value) {
+      setState(() {
+        isMasterChecked = value ?? false;
+        context.read<CartBloc>().add(SelectAllCarts(isMasterChecked));
+      });
+    }
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -26,20 +40,31 @@ class CartScreen extends StatelessWidget {
           if (state is CartLoaded) {
             final productsWithCategory = state.productsWithCategory;
 
+            final productsChecked = productsWithCategory
+                .where((item) => item['isChecked'])
+                .toList();
+
             final hasCheckedItems = productsWithCategory
-                // ignore: collection_methods_unrelated_type
                 .where((item) => item['isChecked'])
                 .isNotEmpty;
 
-            double totalPrice = productsWithCategory
+            int totalPrice = productsWithCategory
                 .where((item) => item['isChecked'])
-                .fold<double>(
+                .fold<int>(
               0,
               (total, item) {
                 final product = item['product'] as ProductModel;
-                return total + item['quantity'] * product.price;
+                return total + item['quantity'] * product.price as int;
               },
             );
+
+            isMasterChecked =
+                productsWithCategory.every((item) => item['isChecked']);
+
+            final orderDetail = {
+              'products': productsChecked,
+              'totalPrice': totalPrice,
+            };
 
             return Container(
               height: 80,
@@ -57,52 +82,65 @@ class CartScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text('Total'),
-                        Text(
-                          currencyFormatter(totalPrice.toInt()),
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          ),
-                        ),
-                      ],
+                    Checkbox(
+                      value: isMasterChecked,
+                      onChanged: (value) => toggleMasterCheckbox(value),
+                      activeColor: Colors.black,
                     ),
                     const SizedBox(width: 16),
-                    BlocBuilder<CartBloc, CartState>(
-                      builder: (context, state) {
-                        return ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.grey.shade200,
-                          ),
-                          onPressed: hasCheckedItems
-                              ? () {
-                                  context.push(
-                                      '${RouteNames.cart}/${RouteNames.order}');
-                                }
-                              : null,
-                          child: Text(
-                            'Checkout',
-                            style: TextStyle(
-                              color: hasCheckedItems
-                                  ? Colors.black
-                                  : Colors.grey.shade400,
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text('Total'),
+                            Text(
+                              currencyFormatter(totalPrice.toInt()),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                              ),
                             ),
-                          ),
-                        );
-                      },
+                          ],
+                        ),
+                        const SizedBox(width: 16),
+                        BlocBuilder<CartBloc, CartState>(
+                          builder: (context, state) {
+                            return ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.grey.shade200,
+                              ),
+                              onPressed: hasCheckedItems
+                                  ? () {
+                                      context.push(
+                                        '${RouteNames.cart}/${RouteNames.order}',
+                                        extra: orderDetail,
+                                      );
+                                    }
+                                  : null,
+                              child: Text(
+                                'Checkout',
+                                style: TextStyle(
+                                  color: hasCheckedItems
+                                      ? Colors.black
+                                      : Colors.grey.shade400,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
                     ),
                   ],
                 ),
               ),
             );
           } else {
-            return Container();
+            return Container(height: 80, color: Colors.white);
           }
         },
       ),
@@ -110,6 +148,12 @@ class CartScreen extends StatelessWidget {
         builder: (context, state) {
           if (state is CartLoading) {
             return const Center(child: CircularProgressIndicator());
+          } else if (state is CartEmpty) {
+            setState(() {
+              isMasterChecked = false;
+            });
+
+            return const Center(child: Text('Cart is empty. Let\'s add some!'));
           } else if (state is CartLoaded) {
             final productsWithCategory = state.productsWithCategory;
 
@@ -134,7 +178,7 @@ class CartScreen extends StatelessWidget {
                         ),
                         width: double.infinity,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(32),
+                          borderRadius: BorderRadius.circular(16),
                           border: Border.all(
                             color: Colors.grey.shade300,
                             width: 1.0,
@@ -246,9 +290,15 @@ class CartScreen extends StatelessWidget {
               ],
             );
           } else if (state is CartError) {
-            return Center(child: Text(state.message));
+            setState(() {
+              isMasterChecked = false;
+            });
+
+            return Center(
+              child: Text(state.message),
+            );
           } else {
-            return const Center(child: Text('Unexpected state'));
+            return Container();
           }
         },
       ),

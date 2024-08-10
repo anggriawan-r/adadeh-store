@@ -8,7 +8,6 @@ class UserModel {
   final String role;
   final String address;
   final String photoUrl;
-  final bool emailVerified;
 
   UserModel({
     required this.name,
@@ -17,7 +16,6 @@ class UserModel {
     required this.role,
     required this.address,
     required this.photoUrl,
-    required this.emailVerified,
   });
 
   factory UserModel.fromFirestore(
@@ -32,7 +30,6 @@ class UserModel {
       role: data?['role'] ?? '',
       address: data?['address'] ?? '',
       photoUrl: data?['photoUrl'] ?? '',
-      emailVerified: data?['emailVerified'] ?? false,
     );
   }
 
@@ -44,7 +41,6 @@ class UserModel {
       'role': role,
       'address': address,
       'photoUrl': photoUrl,
-      'emailVerified': emailVerified,
     };
   }
 }

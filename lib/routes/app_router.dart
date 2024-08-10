@@ -2,8 +2,11 @@ import 'package:adadeh_store/routes/route_names.dart';
 import 'package:adadeh_store/screens/auth/login/login_screen.dart';
 import 'package:adadeh_store/screens/cart/cart_screen.dart';
 import 'package:adadeh_store/screens/cart/order_screen.dart';
-import 'package:adadeh_store/screens/cart/select_payment_screen.dart';
 import 'package:adadeh_store/screens/home/home_screen.dart';
+import 'package:adadeh_store/screens/order_history/order_history_screen.dart';
+import 'package:adadeh_store/screens/payment/payment_debit_screen.dart';
+import 'package:adadeh_store/screens/payment/payment_status_screen.dart';
+import 'package:adadeh_store/screens/payment/payment_wallet_screen.dart';
 import 'package:adadeh_store/screens/product/product_detail.dart';
 import 'package:adadeh_store/screens/product/product_screen.dart';
 import 'package:adadeh_store/screens/auth/register/register_screen.dart';
@@ -43,17 +46,38 @@ final GoRouter appRouter = GoRouter(
       builder: (context, state) => const LoginScreen(),
     ),
     GoRoute(
-        path: RouteNames.cart,
-        builder: (context, state) => const CartScreen(),
-        routes: [
-          GoRoute(
-            path: RouteNames.order,
-            builder: (context, state) => const OrderScreen(),
-          ),
-          GoRoute(
-            path: RouteNames.payment,
-            builder: (context, state) => const SelectPaymentScreen(),
-          ),
-        ]),
+      path: RouteNames.cart,
+      builder: (context, state) => const CartScreen(),
+      routes: [
+        GoRoute(
+          path: RouteNames.order,
+          builder: (context, state) => const OrderScreen(),
+        ),
+      ],
+    ),
+    GoRoute(
+      path: RouteNames.paymentDebit,
+      builder: (context, state) => const PaymentDebitScreen(),
+      routes: [
+        GoRoute(
+          path: RouteNames.paymentStatus,
+          builder: (context, state) => const PaymentStatusScreen(),
+        ),
+      ],
+    ),
+    GoRoute(
+      path: RouteNames.paymentWallet,
+      builder: (context, state) => const PaymentWalletScreen(),
+      routes: [
+        GoRoute(
+          path: RouteNames.paymentStatus,
+          builder: (context, state) => const PaymentStatusScreen(),
+        ),
+      ],
+    ),
+    GoRoute(
+      path: RouteNames.orderHistory,
+      builder: (context, state) => const OrderHistoryScreen(),
+    ),
   ],
 );

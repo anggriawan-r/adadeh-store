@@ -11,6 +11,7 @@ class AuthFormField extends StatelessWidget {
   bool obscureText;
   final void Function()? onPressedSuffixIcon;
   final String? Function(String?)? validator;
+  TextInputType? keyboardType;
 
   AuthFormField({
     super.key,
@@ -22,11 +23,13 @@ class AuthFormField extends StatelessWidget {
     required this.obscureText,
     this.onPressedSuffixIcon,
     this.validator,
+    this.keyboardType = TextInputType.text,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      keyboardType: keyboardType,
       controller: controller,
       decoration: InputDecoration(
         labelText: label,

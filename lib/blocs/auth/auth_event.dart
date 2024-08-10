@@ -26,12 +26,14 @@ class AuthRegistered extends AuthEvent {
   final String phone;
   final String email;
   final String password;
+  final String address;
 
   const AuthRegistered({
     required this.name,
     required this.phone,
     required this.email,
     required this.password,
+    required this.address,
   });
 
   @override

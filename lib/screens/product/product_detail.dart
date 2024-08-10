@@ -40,10 +40,10 @@ class _ProductDetailState extends State<ProductDetail> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(message),
-          duration: const Duration(seconds: 2),
+          duration: const Duration(seconds: 1),
           behavior: SnackBarBehavior.floating,
           onVisible: () {
-            Future.delayed(const Duration(seconds: 2), () {
+            Future.delayed(const Duration(seconds: 1), () {
               setState(() {
                 _isSnackBarVisible = false;
               });

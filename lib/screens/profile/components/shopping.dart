@@ -34,7 +34,9 @@ class Shopping extends StatelessWidget {
             thickness: 1.0,
           ),
           ListTile(
-            onTap: () {},
+            onTap: () {
+              context.push(RouteNames.orderHistory);
+            },
             contentPadding: EdgeInsets.zero,
             leading: const Icon(Iconsax.card),
             title: const Text('Order history'),

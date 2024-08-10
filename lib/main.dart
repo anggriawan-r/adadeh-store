@@ -1,4 +1,5 @@
 import 'package:adadeh_store/blocs/auth/auth_bloc.dart';
+import 'package:adadeh_store/blocs/order/order_bloc.dart';
 import 'package:adadeh_store/blocs/cart/cart_bloc.dart';
 import 'package:adadeh_store/blocs/product/product_bloc.dart';
 import 'package:adadeh_store/blocs/profile/profile_bloc.dart';
@@ -53,6 +54,9 @@ class MainApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => CartBloc()..add(LoadCart()),
+        ),
+        BlocProvider(
+          create: (context) => OrderBloc(),
         ),
       ],
       child: MaterialApp.router(

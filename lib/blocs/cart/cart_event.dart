@@ -55,3 +55,12 @@ class DecrementQuantity extends CartEvent {
   @override
   List<Object> get props => [productId];
 }
+
+class SelectAllCarts extends CartEvent {
+  final bool isChecked;
+
+  const SelectAllCarts(this.isChecked);
+
+  @override
+  List<Object> get props => [isChecked];
+}

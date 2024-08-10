@@ -21,6 +21,8 @@ class CartLoaded extends CartState {
   List<Object> get props => [cart, productsWithCategory];
 }
 
+class CartEmpty extends CartState {}
+
 class CartError extends CartState {
   final String message;
 

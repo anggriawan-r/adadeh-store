@@ -31,4 +31,5 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/logo/adadeh.svg
+    - assets/logo/
+    - assets/icons/

@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 class SubmitButton extends StatelessWidget {
   final String text;
   final void Function()? onPressed;
-  final AuthState state;
+  final AuthState? state;
 
   const SubmitButton({
     super.key,
     this.onPressed,
     required this.text,
-    required this.state,
+    this.state,
   });
 
   @override

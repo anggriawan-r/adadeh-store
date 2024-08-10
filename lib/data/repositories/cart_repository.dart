@@ -28,7 +28,7 @@ class CartRepository {
           await _firestore.collection('carts').doc(userId).get();
 
       if (!cartSnapshot.exists) {
-        throw Exception('Cart not found');
+        throw Exception('Cart is empty. Let\'s add some!');
       }
 
       final cart = CartModel.fromFirestore(cartSnapshot, null);
@@ -130,6 +130,29 @@ class CartRepository {
       }
     } catch (e) {
       throw Exception('Error updating cart item: $e');
+    }
+  }
+
+  Future<void> selectAllCartItems(bool isChecked) async {
+    final userId = _auth.currentUser!.uid;
+
+    try {
+      final cartDocRef = _firestore.collection('carts').doc(userId);
+      final cartSnapshot = await cartDocRef.get();
+
+      if (!cartSnapshot.exists) {
+        throw Exception('Cart not found');
+      }
+
+      final cart = CartModel.fromFirestore(cartSnapshot, null);
+
+      for (final item in cart.products) {
+        item.isChecked = isChecked;
+      }
+
+      await cartDocRef.set(cart.toFirestore());
+    } catch (e) {
+      throw Exception('Error selecting all cart items: $e');
     }
   }
 

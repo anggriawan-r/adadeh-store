@@ -1,12 +1,12 @@
 import 'package:adadeh_store/blocs/auth/auth_bloc.dart';
 import 'package:adadeh_store/routes/route_names.dart';
-import 'package:adadeh_store/screens/auth/components/auth_form_field.dart';
 import 'package:adadeh_store/screens/auth/components/auth_top_bar.dart';
-import 'package:adadeh_store/screens/auth/components/submit_button.dart';
+import 'package:adadeh_store/screens/auth/components/progress_bar.dart';
+import 'package:adadeh_store/screens/auth/register/register_page_1.dart';
+import 'package:adadeh_store/screens/auth/register/register_page_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:iconsax/iconsax.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -16,153 +16,172 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  final _registerFormKey = GlobalKey<FormState>();
-  final _nameController = TextEditingController();
-  final _phoneController = TextEditingController();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  bool _obscureText = true;
+  final PageController _pageController = PageController();
+
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
+
+  final GlobalKey<FormState> _formPage1Key = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formPage2Key = GlobalKey<FormState>();
+
+  int _currentPage = 0;
+
+  void _nextPage() {
+    _pageController.nextPage(
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
+    setState(() {
+      _currentPage++;
+    });
+  }
+
+  void _previousPage() {
+    _pageController.previousPage(
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
+    setState(() {
+      _currentPage--;
+    });
+  }
+
+  void _onSubmit() {
+    if (_currentPage == 0 && _formPage1Key.currentState!.validate()) {
+      _nextPage();
+    } else if (_currentPage == 1 && _formPage2Key.currentState!.validate()) {
+      BlocProvider.of<AuthBloc>(context).add(
+        AuthRegistered(
+          email: _emailController.text,
+          password: _passwordController.text,
+          name: _nameController.text,
+          phone: _phoneController.text,
+          address: _addressController.text,
+        ),
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          backgroundColor: Colors.green,
+          content: Text('Register success. Please login'),
+        ),
+      );
+
+      context.go(RouteNames.login);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: BlocConsumer<AuthBloc, AuthState>(
-        listener: (context, state) {
-          if (state is AuthRegisterSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                backgroundColor: Colors.green,
-                content: Text(
-                  'Registration success. You can login now.',
+    return BlocBuilder<AuthBloc, AuthState>(
+      builder: (context, state) {
+        return Scaffold(
+          resizeToAvoidBottomInset: false,
+          backgroundColor: Colors.white,
+          body: SafeArea(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: ProgressBar(
+                    currentPage: _currentPage,
+                    totalPages: 2,
+                  ),
                 ),
-              ),
-            );
-
-            context.go(RouteNames.login);
-          }
-
-          if (state is AuthFailure) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                backgroundColor: Colors.red,
-                content: Text(state.error),
-              ),
-            );
-          }
-        },
-        builder: (context, state) {
-          return SingleChildScrollView(
-            child: SafeArea(
-              child: Container(
-                padding: const EdgeInsets.all(16.0),
-                height: MediaQuery.of(context).size.height - kToolbarHeight,
-                child: Form(
-                  key: _registerFormKey,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                const SizedBox(height: 16),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: AuthTopBar(
+                      iconLabel: 'LOGIN',
+                      onPressed: () {
+                        context.go(RouteNames.login);
+                      }),
+                ),
+                const SizedBox(height: 32),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  alignment: Alignment.centerLeft,
+                  child: const Text(
+                    'SIGN UP.',
+                    style: TextStyle(
+                      fontSize: 56,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: PageView(
+                    physics: const NeverScrollableScrollPhysics(),
+                    controller: _pageController,
+                    onPageChanged: (page) {
+                      setState(() {
+                        _currentPage = page;
+                      });
+                    },
                     children: [
-                      AuthTopBar(
-                        iconLabel: 'LOG IN',
-                        onPressed: () => context.go(RouteNames.login),
-                      ),
-                      const Spacer(),
-                      const Text(
-                        'SIGN UP.',
-                        style: TextStyle(
-                          fontSize: 48,
-                          fontWeight: FontWeight.w900,
+                      Form(
+                        key: _formPage1Key,
+                        child: RegisterPage1(
+                          onNext: _nextPage,
+                          emailController: _emailController,
+                          passwordController: _passwordController,
                         ),
                       ),
-                      const SizedBox(height: 32),
-                      AuthFormField(
-                        controller: _nameController,
-                        label: 'Name',
-                        prefixIcon: Iconsax.user,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your name';
-                          }
-                          return null;
-                        },
-                        obscureText: false,
+                      Form(
+                        key: _formPage2Key,
+                        child: RegisterPage2(
+                          onPrevious: _previousPage,
+                          nameController: _nameController,
+                          phoneController: _phoneController,
+                          addressController: _addressController,
+                        ),
                       ),
-                      const SizedBox(height: 16),
-                      AuthFormField(
-                        controller: _phoneController,
-                        label: 'Phone',
-                        prefixIcon: Iconsax.call,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your phone number';
-                          }
-                          return null;
-                        },
-                        obscureText: false,
-                      ),
-                      const SizedBox(height: 16),
-                      AuthFormField(
-                        controller: _emailController,
-                        label: 'Email',
-                        prefixIcon: Iconsax.sms,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your email';
-                          }
-                          return null;
-                        },
-                        obscureText: false,
-                      ),
-                      const SizedBox(height: 16),
-                      AuthFormField(
-                        controller: _passwordController,
-                        label: 'Password',
-                        prefixIcon: Iconsax.lock,
-                        isPassword: true,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your password';
-                          }
-                          return null;
-                        },
-                        obscureText: _obscureText,
-                        onPressedSuffixIcon: () {
-                          setState(() {
-                            _obscureText = !_obscureText;
-                          });
-                        },
-                      ),
-                      const SizedBox(height: 32),
-                      SubmitButton(
-                        text: 'SIGN UP',
-                        onPressed: () {
-                          if (state is AuthLoading) {
-                            return;
-                          }
-
-                          if (_registerFormKey.currentState!.validate()) {
-                            context.read<AuthBloc>().add(
-                                  AuthRegistered(
-                                    name: _nameController.text,
-                                    phone: _phoneController.text,
-                                    email: _emailController.text,
-                                    password: _passwordController.text,
-                                  ),
-                                );
-                          }
-                        },
-                        state: state,
-                      ),
-                      const Spacer(),
                     ],
                   ),
                 ),
-              ),
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            foregroundColor: Colors.black,
+                          ),
+                          onPressed: _currentPage == 0
+                              ? null
+                              : () {
+                                  _previousPage();
+                                },
+                          child: const Text('Previous'),
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.black,
+                            foregroundColor: Colors.white,
+                          ),
+                          onPressed: () => _onSubmit(),
+                          child: Text(_currentPage == 1 ? 'SIGN UP' : 'Next'),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const Spacer(flex: 1),
+              ],
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

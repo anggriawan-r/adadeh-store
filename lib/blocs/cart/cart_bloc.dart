@@ -17,10 +17,15 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       try {
         final cartData = await _cartRepository.getCartForUser();
         final cart = cartData['cart'] as CartModel;
-        final products =
+        final productsWithCategory =
             cartData['productsWithCategory'] as List<Map<String, dynamic>>;
 
-        emit(CartLoaded(cart, products));
+        if (cart.products.isEmpty) {
+          emit(CartEmpty());
+          return;
+        }
+
+        emit(CartLoaded(cart, productsWithCategory));
       } catch (e) {
         emit(CartError('Error fetching cart: $e'));
       }
@@ -140,6 +145,25 @@ class CartBloc extends Bloc<CartEvent, CartState> {
             .decrementCartItemQuantity(event.productId)
             .catchError((e) {
           emit(CartError('Error decrementing cart item quantity: $e'));
+          add(LoadCart());
+        });
+      }
+    });
+
+    on<SelectAllCarts>((event, emit) async {
+      final currentState = state;
+
+      if (currentState is CartLoaded) {
+        final updatedProducts =
+            List<Map<String, dynamic>>.from(currentState.productsWithCategory)
+                .map((item) {
+          return {...item, 'isChecked': event.isChecked};
+        }).toList();
+
+        emit(CartLoaded(currentState.cart, updatedProducts));
+
+        _cartRepository.selectAllCartItems(event.isChecked).catchError((e) {
+          emit(CartError('Error updating cart item: $e'));
           add(LoadCart());
         });
       }

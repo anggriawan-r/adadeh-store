@@ -11,6 +11,7 @@ class AuthRepository {
     required String phone,
     required String email,
     required String password,
+    required String address,
   }) async {
     try {
       final UserCredential userCredential =
@@ -29,15 +30,16 @@ class AuthRepository {
           email: email,
           phone: phone,
           role: 'user',
-          address: '',
+          address: address,
           photoUrl: '',
-          emailVerified: false,
         );
 
         await _firebaseFirestore.collection('users').doc(user.uid).set(
               userData.toFirestore(),
             );
       }
+
+      _firebaseAuth.signOut();
 
       return user;
     } catch (e) {
