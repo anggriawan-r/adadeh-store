@@ -1,4 +1,5 @@
 import 'package:adadeh_store/blocs/auth/auth_bloc.dart';
+import 'package:adadeh_store/blocs/cart/cart_bloc.dart';
 import 'package:adadeh_store/routes/route_names.dart';
 import 'package:adadeh_store/screens/auth/components/auth_form_field.dart';
 import 'package:adadeh_store/screens/auth/components/auth_top_bar.dart';
@@ -33,6 +34,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 content: Text('Login success.'),
               ),
             );
+
+            context.read<CartBloc>().add(LoadCart());
+
+            if (state.profile.role == 'admin') {
+              context.go(RouteNames.profile);
+            }
 
             context.go(RouteNames.landing);
           }

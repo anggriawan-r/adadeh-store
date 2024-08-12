@@ -1,4 +1,5 @@
 import 'package:adadeh_store/data/models/user_model.dart';
+import 'package:adadeh_store/utils/error_handling.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -74,6 +75,33 @@ class AuthRepository {
     final user = _firebaseAuth.currentUser;
     if (user != null) {
       return user;
+    }
+    return null;
+  }
+
+  Future<UserModel?> getUserProfile() async {
+    try {
+      final User? user = _firebaseAuth.currentUser;
+      if (user != null) {
+        final doc =
+            await _firebaseFirestore.collection('users').doc(user.uid).get();
+        if (doc.exists) {
+          return UserModel.fromFirestore(doc, null);
+        } else {
+          throw ErrorHandling('User not found');
+        }
+      } else {
+        throw ErrorHandling('User not found');
+      }
+    } catch (e) {
+      throw ErrorHandling('Failed to fetch profile: $e');
+    }
+  }
+
+  Future<String?> getUserRole() async {
+    final user = await getUserProfile();
+    if (user != null) {
+      return user.role;
     }
     return null;
   }

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:adadeh_store/data/models/user_model.dart';
 import 'package:flutter/material.dart';
 
@@ -16,8 +14,6 @@ class ProfileInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    log(emailVerified.toString());
-
     return Container(
       padding: const EdgeInsets.only(bottom: 16),
       width: double.infinity,

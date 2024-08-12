@@ -29,6 +29,8 @@ class ProductLoaded extends ProductState {
   List<Object> get props => [productWithCategory];
 }
 
+class ProductDeleted extends ProductState {}
+
 class ProductError extends ProductState {
   final String error;
 

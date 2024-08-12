@@ -14,5 +14,9 @@ class RouteNames {
   static const String profile = '/profile';
 
   static const String adminDashboard = '/admin-dashboard';
+  static const String adminProduct = '/admin-product';
   static const String adminCustomer = '/admin-customer';
+  static const String adminTransaction = '/admin-transaction';
+
+  static const String addProduct = '/add-product';
 }

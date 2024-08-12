@@ -45,6 +45,15 @@ class ProfileScreen extends StatelessWidget {
                           emailVerified: profile.emailVerified,
                         ),
                         const SizedBox(height: 16),
+                        if (profile.role == 'admin')
+                          ProfileCard(
+                            text: 'Admin Dashboard',
+                            icon: Iconsax.category,
+                            onTap: () {
+                              context.push(RouteNames.adminDashboard);
+                            },
+                          ),
+                        const SizedBox(height: 16),
                         const Shopping(),
                         const SizedBox(height: 16),
                         const ProfileSettings(),
