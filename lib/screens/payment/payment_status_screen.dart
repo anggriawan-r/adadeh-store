@@ -1,6 +1,7 @@
 import 'package:adadeh_store/data/models/order_model.dart';
 import 'package:adadeh_store/routes/route_names.dart';
 import 'package:adadeh_store/utils/currency_formatter.dart';
+import 'package:adadeh_store/utils/pdf_generator.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
@@ -186,7 +187,16 @@ class PaymentStatusScreen extends StatelessWidget {
                       height: 56,
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () async {
+                          await PdfGenerator(order).generatePdf('invoice');
+
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text('PDF saved successfully')),
+                            );
+                          }
+                        },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.grey.shade200,
                           foregroundColor: Colors.black,
