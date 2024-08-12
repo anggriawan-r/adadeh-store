@@ -3,6 +3,7 @@ import 'package:adadeh_store/blocs/category/category_bloc.dart';
 import 'package:adadeh_store/blocs/order/order_bloc.dart';
 import 'package:adadeh_store/blocs/cart/cart_bloc.dart';
 import 'package:adadeh_store/blocs/product/product_bloc.dart';
+import 'package:adadeh_store/blocs/transaction/transaction_bloc.dart';
 import 'package:adadeh_store/firebase_options.dart';
 import 'package:adadeh_store/notifications/notification_helper.dart';
 import 'package:adadeh_store/routes/app_router.dart';
@@ -52,6 +53,9 @@ void main() async {
         ),
         BlocProvider(
           create: (context) => CategoryBloc(),
+        ),
+        BlocProvider(
+          create: (context) => TransactionBloc()..add(LoadTransactions()),
         ),
       ],
       child: const MainApp(),

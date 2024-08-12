@@ -4,16 +4,17 @@ import 'package:adadeh_store/data/models/product_model.dart';
 import 'package:adadeh_store/routes/route_names.dart';
 import 'package:adadeh_store/utils/currency_formatter.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
 
 class ProductListView extends StatelessWidget {
   final AllProductsLoaded state;
+  final void Function(BuildContext, ProductModel) onDelete;
 
   const ProductListView({
     super.key,
     required this.state,
+    required this.onDelete,
   });
 
   @override
@@ -72,12 +73,35 @@ class ProductListView extends StatelessWidget {
                           style: const TextStyle(fontSize: 16),
                         ),
                         const SizedBox(height: 8),
-                        Text(
-                          'Stock: ${product.stock.toString()}',
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey,
-                          ),
+                        Row(
+                          children: [
+                            Text(
+                              'Stock: ${product.stock.toString()}',
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            if (product.isLowStock) ...[
+                              const SizedBox(height: 8),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 4, horizontal: 8),
+                                decoration: BoxDecoration(
+                                  color: Colors.redAccent,
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: const Text(
+                                  'Low Stock!',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ],
                         ),
                       ],
                     ),
@@ -112,9 +136,7 @@ class ProductListView extends StatelessWidget {
                     const SizedBox(width: 8),
                     ElevatedButton(
                       onPressed: () {
-                        context
-                            .read<ProductBloc>()
-                            .add(DeleteProduct(productId: product.id));
+                        onDelete(context, product);
                       },
                       style: ElevatedButton.styleFrom(
                         elevation: 0,

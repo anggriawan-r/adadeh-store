@@ -1,4 +1,5 @@
 import 'package:adadeh_store/blocs/order/order_bloc.dart';
+import 'package:adadeh_store/data/models/order_model.dart';
 import 'package:adadeh_store/routes/route_names.dart';
 import 'package:adadeh_store/utils/currency_formatter.dart';
 import 'package:flutter/material.dart';
@@ -10,105 +11,98 @@ class PaymentDebitScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final extra = GoRouterState.of(context).extra as Map<String, dynamic>?;
-    final totalAmount = (extra?['totalAmount'] as num?)?.toInt() ?? 0;
-    final orderId = extra?['orderId'] as String? ?? '';
+    final order = GoRouterState.of(context).extra as OrderModel;
 
-    if (extra == null || orderId.isEmpty) {
-      return const Scaffold(
+    return BlocListener<OrderBloc, OrderState>(
+      listener: (context, state) {
+        if (state is OrderUpdated) {
+          context.pushReplacement(
+            '${RouteNames.paymentDebit}/${RouteNames.paymentStatus}',
+            extra: state.order,
+          );
+        }
+      },
+      child: Scaffold(
         backgroundColor: Colors.white,
-        body: Center(
-          child: CircularProgressIndicator(
-            color: Colors.black,
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          title: const Text(
+            'Debit Payment',
+            style: TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
-      );
-    }
-
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: const Text(
-          'Debit Payment',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  'Total Payment',
-                  style: TextStyle(
-                    fontSize: 16,
-                  ),
-                ),
-                Text(
-                  currencyFormatter(totalAmount),
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 32),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text('Debit Code', style: TextStyle(fontSize: 16)),
-                const SizedBox(height: 8),
-                TextField(
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    hintText: '123456',
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(
-                        color: Colors.grey.shade300,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: const BorderSide(
-                        width: 2,
-                        color: Colors.black,
-                      ),
+        body: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Total Payment',
+                    style: TextStyle(
+                      fontSize: 16,
                     ),
                   ),
-                ),
-              ],
-            ),
-            const Spacer(),
-            SizedBox(
-              height: 56,
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {
-                  context.read<OrderBloc>().add(
-                      UpdateOrderStatus(orderId: orderId, status: 'success'));
-
-                  context.pushReplacement(
-                      '${RouteNames.paymentDebit}/${RouteNames.paymentStatus}',
-                      extra: {
-                        'totalAmount': totalAmount,
-                      });
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.black,
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+                  Text(
+                    currencyFormatter(order.totalAmount.toInt()),
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                child: const Text('Confirm Payment'),
+                ],
               ),
-            ),
-          ],
+              const SizedBox(height: 32),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('Debit Code', style: TextStyle(fontSize: 16)),
+                  const SizedBox(height: 8),
+                  TextField(
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      hintText: '123456',
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(
+                          color: Colors.grey.shade300,
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: const BorderSide(
+                          width: 2,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const Spacer(),
+              SizedBox(
+                height: 56,
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    context.read<OrderBloc>().add(UpdateOrderStatus(
+                          orderId: order.id,
+                          status: 'success',
+                        ));
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: const Text('Confirm Payment'),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -22,6 +22,15 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _obscureText = true;
 
   @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    _loginFormKey.currentState?.dispose();
+    _loginFormKey.currentState?.reset();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,

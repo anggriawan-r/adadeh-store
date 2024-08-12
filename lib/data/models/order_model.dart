@@ -40,6 +40,22 @@ class OrderModel {
 
   Map<String, dynamic> toFirestore() {
     return {
+      'id': id,
+      'adminFee': adminFee,
+      'shippingCost': shippingCost,
+      'status': status,
+      'totalAmount': totalAmount,
+      'totalPrice': totalPrice,
+      'userId': userId,
+      'orderDate': orderDate,
+      'paymentMethod': paymentMethod,
+      'products': products,
+    };
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
       'adminFee': adminFee,
       'shippingCost': shippingCost,
       'status': status,

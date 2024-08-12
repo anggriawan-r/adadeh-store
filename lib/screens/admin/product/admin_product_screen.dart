@@ -1,4 +1,5 @@
 import 'package:adadeh_store/blocs/product/product_bloc.dart';
+import 'package:adadeh_store/data/models/product_model.dart';
 import 'package:adadeh_store/routes/route_names.dart';
 import 'package:adadeh_store/screens/admin/product/components/product_list_view.dart';
 import 'package:adadeh_store/screens/admin/product/components/search_product_bar.dart';
@@ -8,6 +9,32 @@ import 'package:go_router/go_router.dart';
 
 class AdminProductScreen extends StatelessWidget {
   const AdminProductScreen({super.key});
+
+  void _showDialog(BuildContext context, ProductModel product) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Product'),
+        content: const Text('Are you sure you want to delete this product?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              context
+                  .read<ProductBloc>()
+                  .add(DeleteProduct(productId: product.id));
+
+              return Navigator.pop(context);
+            },
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +98,10 @@ class AdminProductScreen extends StatelessWidget {
                 return Column(
                   children: [
                     SearchProductBar(),
-                    ProductListView(state: state),
+                    ProductListView(
+                      state: state,
+                      onDelete: _showDialog,
+                    ),
                   ],
                 );
               } else if (state is ProductError) {

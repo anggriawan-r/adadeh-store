@@ -21,12 +21,21 @@ class OrderLoaded extends OrderState {
 }
 
 class OrderSubmitted extends OrderState {
-  final String orderId;
+  final OrderModel order;
 
-  const OrderSubmitted(this.orderId);
+  const OrderSubmitted(this.order);
 
   @override
-  List<Object> get props => [orderId];
+  List<Object> get props => [order];
+}
+
+class OrderUpdated extends OrderState {
+  final OrderModel order;
+
+  const OrderUpdated(this.order);
+
+  @override
+  List<Object> get props => [order];
 }
 
 class OrderFailure extends OrderState {

@@ -1,9 +1,12 @@
 import 'package:adadeh_store/blocs/auth/auth_bloc.dart';
 import 'package:adadeh_store/routes/route_names.dart';
+import 'package:adadeh_store/screens/admin/category/admin_category_screen.dart';
+import 'package:adadeh_store/screens/admin/customer/admin_customer_screen.dart';
 import 'package:adadeh_store/screens/admin/dashboard/dashboard_screen.dart';
 import 'package:adadeh_store/screens/admin/product/add_product_screen.dart';
 import 'package:adadeh_store/screens/admin/product/admin_product_screen.dart';
 import 'package:adadeh_store/screens/admin/product/edit_product_screen.dart';
+import 'package:adadeh_store/screens/admin/transaction/admin_transaction_screen.dart';
 import 'package:adadeh_store/screens/auth/login/login_screen.dart';
 import 'package:adadeh_store/screens/cart/cart_screen.dart';
 import 'package:adadeh_store/screens/cart/order_screen.dart';
@@ -101,7 +104,7 @@ final GoRouter appRouter = GoRouter(
       builder: (context, state) => const PaymentDebitScreen(),
       routes: [
         GoRoute(
-          path: RouteNames.paymentStatus,
+          path: 'payment-status',
           builder: (context, state) => const PaymentStatusScreen(),
         ),
       ],
@@ -111,7 +114,7 @@ final GoRouter appRouter = GoRouter(
       builder: (context, state) => const PaymentWalletScreen(),
       routes: [
         GoRoute(
-          path: RouteNames.paymentStatus,
+          path: 'payment-status',
           builder: (context, state) => const PaymentStatusScreen(),
         ),
       ],
@@ -119,6 +122,12 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: RouteNames.orderHistory,
       builder: (context, state) => const OrderHistoryScreen(),
+      routes: [
+        GoRoute(
+          path: 'payment-status',
+          builder: (context, state) => const PaymentStatusScreen(),
+        ),
+      ],
     ),
     GoRoute(
       path: RouteNames.adminDashboard,
@@ -159,11 +168,21 @@ final GoRouter appRouter = GoRouter(
     ),
     GoRoute(
       path: RouteNames.adminCustomer,
-      builder: (context, state) => const AdminProductScreen(),
+      builder: (context, state) => const AdminCustomerScreen(),
     ),
     GoRoute(
       path: RouteNames.adminTransaction,
-      builder: (context, state) => const AdminProductScreen(),
+      builder: (context, state) => const AdminTransactionScreen(),
+      routes: [
+        GoRoute(
+          path: RouteNames.paymentStatus,
+          builder: (context, state) => const PaymentStatusScreen(),
+        ),
+      ],
+    ),
+    GoRoute(
+      path: RouteNames.adminCategory,
+      builder: (context, state) => const AdminCategoryScreen(),
     ),
   ],
 );

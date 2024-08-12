@@ -1,86 +1,53 @@
-import 'package:adadeh_store/blocs/order/order_bloc.dart';
+import 'package:adadeh_store/blocs/transaction/transaction_bloc.dart';
 import 'package:adadeh_store/routes/route_names.dart';
+import 'package:adadeh_store/screens/admin/transaction/components/search_transaction_bar.dart';
 import 'package:adadeh_store/utils/currency_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-class OrderHistoryScreen extends StatelessWidget {
-  const OrderHistoryScreen({super.key});
-
-  void _showCancelDialog(
-      BuildContext context, String orderId, List<dynamic> products) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          backgroundColor: Colors.white,
-          title: const Text('Cancel Order'),
-          content: const Text('Are you sure want to cancel this order?'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('No', style: TextStyle(color: Colors.black)),
-            ),
-            TextButton(
-              onPressed: () {
-                context.read<OrderBloc>().add(UpdateOrderStatus(
-                      orderId: orderId,
-                      status: 'cancelled',
-                      products: products,
-                    ));
-
-                Navigator.pop(context);
-              },
-              child: const Text('Cancel Order',
-                  style: TextStyle(color: Colors.redAccent)),
-            ),
-          ],
-        );
-      },
-    );
-  }
+class AdminTransactionScreen extends StatelessWidget {
+  const AdminTransactionScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    context.read<OrderBloc>().add(LoadOrders());
-
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
         backgroundColor: Colors.grey.shade100,
         title: const Text(
-          'Order History',
+          'Transaction',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(8),
           child: Column(
             children: [
-              BlocBuilder<OrderBloc, OrderState>(
+              const SearchTransactionBar(),
+              const SizedBox(height: 8),
+              BlocBuilder<TransactionBloc, TransactionState>(
                 builder: (context, state) {
-                  if (state is OrderLoaded) {
-                    if (state.orders.isEmpty) {
+                  if (state is TransactionLoaded) {
+                    if (state.transactions.isEmpty) {
                       return const Center(
-                        child: Text('No Orders Found.'),
+                        child: Text('No transaction Found.'),
                       );
                     }
 
                     return ListView.builder(
                       physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
-                      itemCount: state.orders.length,
+                      itemCount: state.transactions.length,
                       itemBuilder: (context, index) {
-                        final order = state.orders[index];
+                        final order = state.transactions[index];
 
                         return Container(
                           margin: EdgeInsets.only(
-                              bottom:
-                                  index != state.orders.length - 1 ? 16 : 0),
+                              bottom: index != state.transactions.length - 1
+                                  ? 8
+                                  : 0),
                           padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
                           width: double.infinity,
                           decoration: BoxDecoration(
@@ -120,7 +87,6 @@ class OrderHistoryScreen extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                              const SizedBox(height: 16),
                               ListView.builder(
                                 physics: const NeverScrollableScrollPhysics(),
                                 shrinkWrap: true,
@@ -179,73 +145,19 @@ class OrderHistoryScreen extends StatelessWidget {
                                       ),
                                     ],
                                   ),
-                                  if (order.status == 'pending')
-                                    Row(
-                                      children: [
-                                        TextButton(
-                                          onPressed: () {
-                                            _showCancelDialog(
-                                              context,
-                                              order.id,
-                                              order.products,
-                                            );
-                                          },
-                                          child: const Text(
-                                            'Cancel',
-                                            style: TextStyle(
-                                              color: Colors.redAccent,
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(width: 8),
-                                        SizedBox(
-                                          child: ElevatedButton(
-                                            onPressed: () {
-                                              if (order.paymentMethod ==
-                                                      'gopay' ||
-                                                  order.paymentMethod ==
-                                                      'ovo') {
-                                                context.push(
-                                                    RouteNames.paymentWallet,
-                                                    extra: order);
-                                              } else {
-                                                context.push(
-                                                    RouteNames.paymentDebit,
-                                                    extra: order);
-                                              }
-                                            },
-                                            style: ElevatedButton.styleFrom(
-                                              foregroundColor: Colors.white,
-                                              backgroundColor: Colors.black,
-                                            ),
-                                            child: const Text(
-                                              'Pay Now',
-                                              style: TextStyle(fontSize: 14),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      context.push(
+                                        '${RouteNames.adminTransaction}/${RouteNames.paymentStatus}',
+                                        extra: order,
+                                      );
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      foregroundColor: Colors.black,
+                                      backgroundColor: Colors.grey.shade200,
                                     ),
-                                  if (order.status == 'success' ||
-                                      order.status == 'cancelled')
-                                    SizedBox(
-                                      child: ElevatedButton(
-                                        onPressed: () {
-                                          context.push(
-                                            '${RouteNames.orderHistory}/${RouteNames.paymentStatus}',
-                                            extra: order,
-                                          );
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                          foregroundColor: Colors.black,
-                                          backgroundColor: Colors.grey.shade200,
-                                        ),
-                                        child: const Text(
-                                          'See Details',
-                                          style: TextStyle(fontSize: 14),
-                                        ),
-                                      ),
-                                    ),
+                                    child: const Text('See Details'),
+                                  ),
                                 ],
                               ),
                             ],
@@ -253,13 +165,13 @@ class OrderHistoryScreen extends StatelessWidget {
                         );
                       },
                     );
-                  } else if (state is OrderLoading) {
+                  } else if (state is TransactionLoading) {
                     return const Center(
                       child: CircularProgressIndicator(),
                     );
-                  } else if (state is OrderFailure) {
+                  } else if (state is TransactionError) {
                     return Center(
-                      child: Text(state.error),
+                      child: Text(state.message),
                     );
                   } else {
                     return const SizedBox.shrink();

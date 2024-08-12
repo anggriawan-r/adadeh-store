@@ -46,4 +46,6 @@ class ProductModel {
       'categoryRef': categoryRef,
     };
   }
+
+  bool get isLowStock => stock < 10;
 }

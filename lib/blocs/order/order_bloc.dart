@@ -36,27 +36,27 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
           };
         }).toList();
 
-        final orderData = {
-          'id': orderRef.id,
-          'userId': event.userId,
-          'products': products,
-          'totalPrice': event.totalPrice,
-          'shippingCost': event.shippingCost,
-          'adminFee': event.adminFee,
-          'totalAmount': totalAmount,
-          'paymentMethod': event.paymentMethod,
-          'orderDate': orderDate.toIso8601String(),
-          'status': 'pending',
-        };
+        final orderData = OrderModel(
+          id: orderRef.id,
+          userId: event.userId,
+          products: products,
+          totalPrice: event.totalPrice.toDouble(),
+          shippingCost: event.shippingCost.toDouble(),
+          adminFee: event.adminFee.toDouble(),
+          totalAmount: totalAmount.toDouble(),
+          paymentMethod: event.paymentMethod,
+          orderDate: orderDate.toString(),
+          status: 'pending',
+        );
 
-        await orderRef.set(orderData);
+        await orderRef.set(orderData.toFirestore());
 
         for (final product in products) {
           await _productRepository.substractStock(
               product['productId'], product['quantity'] as int);
         }
 
-        emit(OrderSubmitted(orderRef.id));
+        emit(OrderSubmitted(orderData));
       } catch (e) {
         emit(OrderFailure(e.toString()));
       }
@@ -97,7 +97,10 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
           }
         }
 
-        add(LoadOrders());
+        final orderSnapshot = await orderRef.get();
+        final orderData = OrderModel.fromFirestore(orderSnapshot.data()!);
+
+        emit(OrderUpdated(orderData));
       } catch (e) {
         emit(OrderFailure(e.toString()));
       }

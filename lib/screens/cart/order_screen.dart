@@ -38,18 +38,12 @@ class _OrderScreenState extends State<OrderScreen> {
               _selectedPaymentType == 'ovo') {
             context.pushReplacement(
               RouteNames.paymentWallet,
-              extra: {
-                'totalAmount': totalAmount,
-                'orderId': state.orderId,
-              },
+              extra: state.order,
             );
           } else {
             context.pushReplacement(
               RouteNames.paymentDebit,
-              extra: {
-                'totalAmount': totalAmount,
-                'orderId': state.orderId,
-              },
+              extra: state.order,
             );
           }
         }
@@ -98,16 +92,6 @@ class _OrderScreenState extends State<OrderScreen> {
                                 userId: FirebaseAuth.instance.currentUser!.uid,
                               ),
                             );
-
-                        if (_selectedPaymentType == 'gopay' ||
-                            _selectedPaymentType == 'ovo') {
-                          context.pushReplacement(RouteNames.paymentWallet,
-                              extra: {
-                                'totalAmount': totalAmount,
-                              });
-                        } else {
-                          context.pushReplacement(RouteNames.paymentDebit);
-                        }
                       }
                     : null,
                 child: const Text(
