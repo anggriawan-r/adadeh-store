@@ -1,6 +1,7 @@
 import 'package:adadeh_store/blocs/order/order_bloc.dart';
 import 'package:adadeh_store/data/models/product_model.dart';
 import 'package:adadeh_store/data/repositories/profile_repository.dart';
+import 'package:adadeh_store/notifications/notification_helper.dart';
 import 'package:adadeh_store/routes/route_names.dart';
 import 'package:adadeh_store/utils/currency_formatter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -32,15 +33,47 @@ class _OrderScreenState extends State<OrderScreen> {
     final int totalAmount = totalPrice + shippingCost + adminFee;
 
     return BlocConsumer<OrderBloc, OrderState>(
-      listener: (context, state) {
+      listener: (context, state) async {
         if (state is OrderSubmitted) {
           if (_selectedPaymentType == 'gopay' ||
               _selectedPaymentType == 'ovo') {
+            await NotificationHelper.flutterLocalNotificationsPlugin.show(
+              0,
+              'Keranjang ditambahkan',
+              'Tunggu apa lagi, ayo checkout sekarang!',
+              NotificationHelper.notificationDetails,
+            );
+
+            // ignore: use_build_context_synchronously
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Order has been made. You can pay later'),
+                backgroundColor: Colors.green,
+              ),
+            );
+
+            // ignore: use_build_context_synchronously
             context.pushReplacement(
               RouteNames.paymentWallet,
               extra: state.order,
             );
           } else {
+            await NotificationHelper.flutterLocalNotificationsPlugin.show(
+              0,
+              'Transaksi sudah dibuat',
+              'Tunggu apa lagi, ayo bayar sekarang!',
+              NotificationHelper.notificationDetails,
+            );
+
+            // ignore: use_build_context_synchronously
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Order has been made. You can pay later'),
+                backgroundColor: Colors.green,
+              ),
+            );
+
+            // ignore: use_build_context_synchronously
             context.pushReplacement(
               RouteNames.paymentDebit,
               extra: state.order,

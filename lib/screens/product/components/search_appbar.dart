@@ -1,13 +1,26 @@
+import 'package:adadeh_store/blocs/product/product_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax/iconsax.dart';
 
-class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final TextEditingController searchController = TextEditingController();
+class SearchAppBar extends StatefulWidget implements PreferredSizeWidget {
+  const SearchAppBar({super.key});
 
-  SearchAppBar({super.key});
+  @override
+  State<SearchAppBar> createState() => _SearchAppBarState();
 
   @override
   Size get preferredSize => const Size.fromHeight(56);
+}
+
+class _SearchAppBarState extends State<SearchAppBar> {
+  String query = '';
+
+  _onSearchChanged() {
+    context.read<ProductBloc>().add(FilterProducts(
+          query: query,
+        ));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +29,12 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
         children: [
           Expanded(
             child: TextField(
-              controller: searchController,
+              onChanged: (value) {
+                setState(() {
+                  query = value;
+                });
+                _onSearchChanged();
+              },
               decoration: const InputDecoration(
                 prefixIcon: Icon(Iconsax.search_normal),
                 hintText: 'Search...',

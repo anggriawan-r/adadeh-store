@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:adadeh_store/firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -30,7 +32,7 @@ Future<void> main() async {
 
   for (final doc in snapshot.docs) {
     final data = doc.data();
-    print(data);
+    log(data.toString());
   }
 
   runApp(MaterialApp(title: 'Firestore Example', home: MyHomePage()));

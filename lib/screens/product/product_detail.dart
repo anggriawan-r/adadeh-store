@@ -55,17 +55,13 @@ class _ProductDetailState extends State<ProductDetail> {
     void addToCart(BuildContext context, CartState cartState) async {
       context.read<CartBloc>().add(AddToCart(widget.id, 1));
 
-      if (cartState is CartLoaded) {
-        showSnackBar('Added to cart');
-        await NotificationHelper.flutterLocalNotificationsPlugin.show(
-          0,
-          'Keranjang ditambahkan',
-          'Tunggu apa lagi, ayo checkout sekarang!',
-          NotificationHelper.notificationDetails,
-        );
-      } else if (cartState is CartError) {
-        showSnackBar('Something went wrong. Please try again.');
-      }
+      showSnackBar('Added to cart');
+      await NotificationHelper.flutterLocalNotificationsPlugin.show(
+        0,
+        'Keranjang ditambahkan',
+        'Tunggu apa lagi, ayo checkout sekarang!',
+        NotificationHelper.notificationDetails,
+      );
     }
 
     return Scaffold(

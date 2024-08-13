@@ -97,10 +97,10 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
           }
         }
 
-        final orderSnapshot = await orderRef.get();
-        final orderData = OrderModel.fromFirestore(orderSnapshot.data()!);
+        // final orderSnapshot = await orderRef.get();
+        // final orderData = OrderModel.fromFirestore(orderSnapshot.data()!);
 
-        emit(OrderUpdated(orderData));
+        add(LoadOrders());
       } catch (e) {
         emit(OrderFailure(e.toString()));
       }

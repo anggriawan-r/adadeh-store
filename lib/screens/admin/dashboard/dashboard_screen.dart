@@ -1,5 +1,8 @@
+import 'package:adadeh_store/blocs/order/order_bloc.dart';
 import 'package:adadeh_store/routes/route_names.dart';
+import 'package:adadeh_store/utils/currency_formatter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
 
@@ -25,12 +28,14 @@ class AdminDashboardScreen extends StatelessWidget {
     {
       'icon': Iconsax.category_2,
       'label': 'Category',
-      'destination': RouteNames.adminTransaction,
+      'destination': RouteNames.adminCategory,
     },
   ];
 
   @override
   Widget build(BuildContext context) {
+    context.read<OrderBloc>().add(LoadOrders());
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -75,29 +80,64 @@ class AdminDashboardScreen extends StatelessWidget {
                         color: Colors.grey,
                       ),
                     ),
-                    const Text(
-                      'Rp 0',
-                      style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.deepOrange,
-                      ),
+                    BlocBuilder<OrderBloc, OrderState>(
+                      builder: (context, state) {
+                        if (state is OrderLoaded) {
+                          final totalRevenue = state.orders
+                              .where((order) => order.status == 'success')
+                              .fold(0.0,
+                                  (total, order) => total + order.totalAmount);
+
+                          return Text(
+                            currencyFormatter(totalRevenue.toInt()),
+                            style: const TextStyle(
+                              fontSize: 28,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.deepOrange,
+                            ),
+                          );
+                        }
+
+                        return Text(
+                          currencyFormatter(0),
+                          style: const TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.deepOrange,
+                          ),
+                        );
+                      },
                     ),
                     const SizedBox(height: 16),
                     const Text(
-                      'Total Orders',
+                      'Total Transactions',
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.grey,
                       ),
                     ),
-                    const Text(
-                      '0',
-                      style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.deepOrange,
-                      ),
+                    BlocBuilder<OrderBloc, OrderState>(
+                      builder: (context, state) {
+                        if (state is OrderLoaded) {
+                          return Text(
+                            state.orders.length.toString(),
+                            style: const TextStyle(
+                              fontSize: 28,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.deepOrange,
+                            ),
+                          );
+                        }
+
+                        return const Text(
+                          '0',
+                          style: TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.deepOrange,
+                          ),
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -121,6 +161,24 @@ class AdminDashboardScreen extends StatelessWidget {
                     destination: button['destination'] as String,
                   );
                 },
+              ),
+              const Spacer(),
+              SizedBox(
+                width: double.infinity,
+                height: 56,
+                child: ElevatedButton(
+                  onPressed: () {
+                    context.go(RouteNames.profile);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                  ),
+                  child: const Text('Back to home'),
+                ),
               ),
             ],
           ),

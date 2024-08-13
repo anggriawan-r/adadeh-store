@@ -86,3 +86,14 @@ class AddProduct extends ProductEvent {
         stock,
       ];
 }
+
+class FilterProducts extends ProductEvent {
+  final String? query;
+  final double? minPrice;
+  final double? maxPrice;
+
+  const FilterProducts({this.query, this.minPrice, this.maxPrice});
+
+  @override
+  List<Object?> get props => [query, minPrice, maxPrice];
+}

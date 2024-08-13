@@ -49,7 +49,7 @@ void main() async {
           create: (context) => CartBloc()..add(LoadCart()),
         ),
         BlocProvider(
-          create: (context) => OrderBloc(),
+          create: (context) => OrderBloc()..add(LoadOrders()),
         ),
         BlocProvider(
           create: (context) => CategoryBloc(),

@@ -77,7 +77,7 @@ class ProfileScreen extends StatelessWidget {
           } else if (state is AuthFailure) {
             return Center(child: Text(state.error));
           } else {
-            return const Center(child: Text('Something went wrong.'));
+            return const Center(child: CircularProgressIndicator());
           }
         },
       ),

@@ -22,7 +22,7 @@ class _ProductScreenState extends State<ProductScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: SearchAppBar(),
+      appBar: const SearchAppBar(),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -40,6 +40,12 @@ class _ProductScreenState extends State<ProductScreen> {
                         child: ProductGridFake(),
                       );
                     } else if (state is AllProductsLoaded) {
+                      if (state.productsWithCategory.isEmpty) {
+                        return const Center(
+                          child: Text('No Products Found.'),
+                        );
+                      }
+
                       return ProductGrid(state: state);
                     } else if (state is ProductError) {
                       return Center(child: Text('Error: ${state.error}'));

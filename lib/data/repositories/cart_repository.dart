@@ -75,6 +75,8 @@ class CartRepository {
       if (cartSnapshot.exists) {
         cart = CartModel.fromFirestore(cartSnapshot, null);
       } else {
+        await cartDocRef.set({});
+
         cart = CartModel(
           id: cartDocRef.id,
           userId: userId,
