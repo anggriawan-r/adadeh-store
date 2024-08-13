@@ -61,11 +61,19 @@ class ProductListView extends StatelessWidget {
                             color: Colors.grey,
                           ),
                         ),
-                        Text(
-                          product.name,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
+                        Container(
+                          constraints: BoxConstraints(
+                            maxWidth: MediaQuery.of(context).size.width - 140,
+                          ),
+                          child: Text(
+                            product.name,
+                            maxLines: 2, // Limit to 1 line
+                            overflow: TextOverflow
+                                .ellipsis, // Show ellipsis if overflow
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                         Text(

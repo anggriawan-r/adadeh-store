@@ -107,17 +107,24 @@ class ProductGrid extends StatelessWidget {
                 children: [
                   Text(
                     category.name,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
                       fontSize: 14,
                       color: Colors.grey,
                     ),
                   ),
                   const SizedBox(height: 4),
-                  Text(
-                    product.name,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
+                  SizedBox(
+                    height: 40,
+                    child: Text(
+                      product.name,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                   Text(
