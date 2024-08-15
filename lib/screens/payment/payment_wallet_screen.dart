@@ -18,7 +18,7 @@ class PaymentWalletScreen extends StatelessWidget {
       listener: (context, state) {
         if (state is OrderUpdated) {
           context.pushReplacement(
-            '${RouteNames.paymentWallet}/${RouteNames.paymentStatus}',
+            '${RouteNames.paymentWallet}/payment-status',
             extra: state.order,
           );
         }

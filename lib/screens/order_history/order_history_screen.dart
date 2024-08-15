@@ -32,6 +32,8 @@ class OrderHistoryScreen extends StatelessWidget {
                       products: products,
                     ));
 
+                context.read<OrderBloc>().add(LoadOrders());
+
                 Navigator.pop(context);
               },
               child: const Text('Cancel Order',

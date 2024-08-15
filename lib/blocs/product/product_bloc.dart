@@ -99,7 +99,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       emit(ProductLoading());
       try {
         await _productRepository.deleteProduct(event.productId);
-        emit(ProductDeleted());
+        add(LoadAllProductsWithCategory());
       } catch (e) {
         emit(ProductError(error: e.toString()));
       }

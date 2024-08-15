@@ -39,8 +39,8 @@ class _OrderScreenState extends State<OrderScreen> {
               _selectedPaymentType == 'ovo') {
             await NotificationHelper.flutterLocalNotificationsPlugin.show(
               0,
-              'Keranjang ditambahkan',
-              'Tunggu apa lagi, ayo checkout sekarang!',
+              'Transaksi sudah dibuat',
+              'Tunggu apa lagi, ayo bayar sekarang!',
               NotificationHelper.notificationDetails,
             );
 

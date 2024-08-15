@@ -204,7 +204,7 @@ class ProductRepository {
     try {
       await productImageRef.delete();
     } catch (e) {
-      throw Exception('Error deleting image: $e');
+      return;
     }
   }
 }

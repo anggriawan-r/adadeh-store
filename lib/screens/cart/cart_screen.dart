@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:adadeh_store/blocs/cart/cart_bloc.dart';
 import 'package:adadeh_store/data/models/product_model.dart';
 import 'package:adadeh_store/routes/route_names.dart';
@@ -37,6 +39,8 @@ class _CartScreenState extends State<CartScreen> {
       ),
       bottomSheet: BlocBuilder<CartBloc, CartState>(
         builder: (context, state) {
+          log(state.toString());
+
           if (state is CartLoaded) {
             final productsWithCategory = state.productsWithCategory;
 
