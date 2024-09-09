@@ -34,7 +34,7 @@ state.
 seamless shopping experience for customers and powerful management tools for
 administrators.
 
-![Screenshot of login screen](https://drive.google.com/uc?id=1EbXlGPDehgtix68waz1Dt_N2lgOrmwgU)
+<a href="https://drive.google.com/uc?export=view&id=1EbXlGPDehgtix68waz1Dt_N2lgOrmwgU"><img src="https://drive.google.com/uc?export=view&id=1EbXlGPDehgtix68waz1Dt_N2lgOrmwgU" style="width: 650px; max-width: 100%; height: auto" title="Click to enlarge picture" />
 ![Screenshot of signup screen](https://drive.google.com/file/d/18xfo8ihUSspxdLecIRm5qV68i8QBl5pu/view?usp=sharing)
 ![Screenshot of landing screen](https://drive.google.com/file/d/10RCgJfV4BA_rrfkCwrE4qt4DL6iVn2rD/view?usp=sharing)
 ![Screenshot of products screen](https://drive.google.com/file/d/1YTH0AQesyHXglwmnp5tOxPkA4-wJswwV/view?usp=sharing)
