@@ -34,6 +34,8 @@ state.
 seamless shopping experience for customers and powerful management tools for
 administrators.
 
+## Screenshots
+
 <a href="https://drive.google.com/uc?export=view&id=1EbXlGPDehgtix68waz1Dt_N2lgOrmwgU"><img src="https://drive.google.com/uc?export=view&id=1EbXlGPDehgtix68waz1Dt_N2lgOrmwgU" style="width: 200px; max-width: 100%; height: auto" title="Click to enlarge picture" />
 <a href="https://drive.google.com/uc?export=view&id=18xfo8ihUSspxdLecIRm5qV68i8QBl5pu"><img src="https://drive.google.com/uc?export=view&id=18xfo8ihUSspxdLecIRm5qV68i8QBl5pu" style="width: 200px; max-width: 100%; height: auto" title="Click to enlarge picture" />
 <a href="https://drive.google.com/uc?export=view&id=10RCgJfV4BA_rrfkCwrE4qt4DL6iVn2rD"><img src="https://drive.google.com/uc?export=view&id=10RCgJfV4BA_rrfkCwrE4qt4DL6iVn2rD" style="width: 200px; max-width: 100%; height: auto" title="Click to enlarge picture" />
